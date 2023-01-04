@@ -19,3 +19,9 @@ app.get('/', (req, res) => {
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
+
+app.get('/api/notes', (req, res) => {
+    console.info(`${req.method} request received for notes`);
+    fs.readFile('./db/db.json', (error, data) => res.json(JSON.parse(data)));
+});
+
