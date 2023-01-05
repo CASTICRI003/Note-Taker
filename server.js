@@ -43,3 +43,21 @@ app.post('/api/notes', (req, res) => {
         console.log(`Note has been written to JSON file`)
     });
 });
+
+app.delete('/api/notes/:id', (req, res) => {
+    fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            const parsedNotes = JSON.parse(data);
+            const newNotes = [];
+            for (let i = 0; i < parsedNotes.length; i++) {
+                if (parsedNotes[i].id != req.params.id)
+                newNotes.push(parsedNotes[i])
+            }
+            fs.writeFile(`./db/db.json`, JSON.stringify(newNotes),
+            (writeErr) => writeErr ? console.error(err) : res.json(newNotes)
+            )
+        }
+    });
+});
