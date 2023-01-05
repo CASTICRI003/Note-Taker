@@ -25,3 +25,21 @@ app.get('/api/notes', (req, res) => {
     fs.readFile('./db/db.json', (error, data) => res.json(JSON.parse(data)));
 });
 
+
+app.post('/api/notes', (req, res) => {
+    console.info(`${req.method} request received to add a note`);
+    console.log(req.body);
+    fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            const parsedNotes = JSON.parse(data);
+            req.body.id = uuid();
+            parsedNotes.push(req.body)
+            fs.writeFile(`./db/db.json`, 
+            JSON.stringify(parsedNotes), 
+            (writeErr) => writeErr ? console.error(err) : res.json(parsedNotes))
+        }
+        console.log(`Note has been written to JSON file`)
+    });
+});
